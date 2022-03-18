@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Alert } from 'react-native';
+import { useEffect, useState } from 'react';
 
 import {colors, CLEAR, ENTER } from './src/constants';
 import  Keyboard from './src/components/Keyboard';
@@ -23,6 +23,28 @@ export default function App() {
   const [curRow, setCurRow] = useState(0);
   const [curCol, setCurCol] = useState(0);
   
+  useEffect(() => {
+    if (curRow > 0) {
+      checkGameState()
+    }
+  }, [curRow])
+
+  const checkGameState = () => {
+    if (checkifWon()) {
+      Alert.alert('H U R A A Y !', 'you won')
+    } else if (checkifLost()) {
+      Alert.alert('M E H', 'try again tomorrow')
+    }
+  };
+  const checkifWon = () => {
+    const row = rows[curRow - 1];
+
+    return row.every((letter, i) => letter === letters[i]);
+  }
+  const checkifLost = () => {
+    return curRow === rows.length;
+  }
+
   const onKeyPressed = (key) => {
     const updatedRows = copyArray(rows);
     
@@ -77,7 +99,6 @@ export default function App() {
   const greenCaps = getAlllettersWithColor(colors.primary);
   const yellowCaps = getAlllettersWithColor(colors.secondary);
   const greyCaps = getAlllettersWithColor(colors.darkgrey)
-  
   console.log(greenCaps);
 
   return (
