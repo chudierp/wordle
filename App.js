@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
 import { useState } from 'react';
 
-import {colors} from './src/constants';
+import {colors, CLEAR } from './src/constants';
 import  Keyboard from './src/components/Keyboard';
 
 
@@ -26,6 +26,15 @@ export default function App() {
   const onKeyPressed = (key) => {
     const updateRows = copyArray(rows);
     
+    if (key === CLEAR) {
+      const prevCol = curCol -1;
+      if (prevCol >= 0) {
+      updateRows[curRow][prevCol] = '';
+      setRows(updateRows);
+      setCurCol(prevCol);
+      }
+      return;
+    }
     if (curCol < letters.length) {
     updateRows[curRow][curCol] = key;
     setRows(updateRows);
