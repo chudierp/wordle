@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import {colors} from './src/constants';
 import  Keyboard from './src/components/Keyboard';
-import { borderColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+
 
 const number_of_tries = 4
 
@@ -25,9 +25,12 @@ export default function App() {
   
   const onKeyPressed = (key) => {
     const updateRows = copyArray(rows);
+    
+    if (curCol < letters.length) {
     updateRows[curRow][curCol] = key;
     setRows(updateRows);
     setCurCol(curCol + 1);
+    }
   };
 
   const isCellActive = (row, col) => {
@@ -41,9 +44,10 @@ export default function App() {
       
       <ScrollView style={styles.map}>
         {rows.map((row, i) => (
-          <View style={styles.row}>
+          <View key={`row-${i}`} style={styles.row}>
             {row.map((cell, j) => ( //for each letter, render a cell 
-              <View 
+              <View
+                key={`cell-${i}-${j}`}
                 style={[
                   styles.cell,
                   {
