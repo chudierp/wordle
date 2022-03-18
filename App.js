@@ -51,7 +51,34 @@ export default function App() {
 
   const isCellActive = (row, col) => {
     return row === curRow && col === curCol;
+  };
+
+  const getCellbgColor = (row, col) => {
+    const letter = rows[row][col];
+    
+    if (row >= curRow) {
+      return colors.black;
+    }
+
+    if(letter === letters[col]) {
+      return colors.primary; //if letter is the same as the word position column 
+    }
+    if (letters.includes(letter)) {
+      return colors.secondary;
+    }
+    return colors.darkgrey
+  };
+
+  const getAlllettersWithColor = (color) => {
+    return rows.flatMap((row, i) => 
+      row.filter((cell, j) => getCellbgColor(i, j)=== color)
+    );
   }
+  const greenCaps = getAlllettersWithColor(colors.primary);
+  const yellowCaps = getAlllettersWithColor(colors.secondary);
+  const greyCaps = getAlllettersWithColor(colors.darkgrey)
+  
+  console.log(greenCaps);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +88,7 @@ export default function App() {
       <ScrollView style={styles.map}>
         {rows.map((row, i) => (
           <View key={`row-${i}`} style={styles.row}>
-            {row.map((cell, j) => ( //for each letter, render a cell 
+            {row.map((letter, j) => ( //for each letter, render a cell 
               <View
                 key={`cell-${i}-${j}`}
                 style={[
@@ -70,17 +97,23 @@ export default function App() {
                     borderColor: isCellActive(i,j)
                       ? colors.lightgrey
                       : colors.darkgrey,
+                    backgroundColor: getCellbgColor(i, j)
                   },
                 ]} 
               >
-              <Text style={styles.cellText}>{cell.toUpperCase()}</Text>
+              <Text style={styles.cellText}>{letter.toUpperCase()}</Text>
             </View>
           ))} 
           </View>
         ))}
       </ScrollView>
 
-      <Keyboard onKeyPressed={onKeyPressed} /> 
+      <Keyboard 
+        onKeyPressed={onKeyPressed}
+        greenCaps={greenCaps}
+        yellowCaps={yellowCaps}
+        greyCaps={greyCaps}
+      /> 
     </SafeAreaView>
   );
 }
